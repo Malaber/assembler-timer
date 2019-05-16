@@ -26,6 +26,14 @@ loopinc1:
 inc 0x11
 jmp display1
 
+loopinc2:
+inc 0x12
+jmp display2
+
+loopinc3:
+inc 0x13
+jmp display3
+
 pressed:
 jnb P0.7,inc0
 jmp pressed
@@ -39,11 +47,37 @@ inc1:
 mov 0x10,#0x00
 mov R4, 0x11
 cjne R4 ,#0x09,loopinc1
+jmp inc2
+
+inc2:
+mov 0x11,#0x00
+mov R4, 0x12
+cjne R4 ,#0x09,loopinc2
+jmp inc3
+
+inc3:
+mov 0x12,#0x00
+mov R4, 0x13
+cjne R4 ,#0x09,loopinc3
 jmp res
 
 res:
-mov 0x11,#0x00
-jmp display1
+mov 0x13,#0x00
+jmp display3
+
+display3:
+mov R0, 0x13
+mov A, #0x30
+ADD A,R0
+MOV R0,A
+MOV P3,@R0
+
+display2:
+mov R0, 0x12
+mov A, #0x30
+ADD A,R0
+MOV R0,A
+MOV P2,@R0
 
 display1:
 mov R0, 0x11
@@ -51,6 +85,7 @@ mov A, #0x30
 ADD A,R0
 MOV R0,A
 MOV P1,@R0
+
 display0:
 mov R0, 0x10
 mov A, #0x30
