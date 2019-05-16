@@ -7,39 +7,53 @@ mov 0x35,#0x6D
 mov 0x36,#0x7D
 mov 0x37,#0x07
 mov 0x38,#0x7F
-mov 0x39,#0x67
+mov 0x39,#0x6F
+
+MOV P2,0x30
+MOV P3,0x30
 
 loop:
 jb P0.7,loop
 jmp pressed
 
 loopinch:
-inc 0x10
-jmp loop
+inc 0x11
+jmp displayh
 
 loopincv:
-inc 0x11
-jmp loop
+inc 0x10
+jmp displayv
 
 pressed:
 jb P0.7,inc
 jmp pressed
 
 inc:
-mov R0, 0x10
-cjne R0 ,#0x09,loopinch
+mov R3, 0x11
+cjne R3 ,#0x09,loopinch
 jmp incv
 
 incv:
-mov 0x10,#0x00
-mov R1, 0x11
-cjne R1 ,#0x09,loopincv
+mov 0x11,#0x00
+mov R4, 0x10
+cjne R4 ,#0x09,loopincv
 jmp res
 
 res:
-mov 0x11,#0x00
+mov 0x10,#0x00
+jmp displayv
+
+displayv:
+mov R0, 0x10
+mov A, #0x30
+ADD A,R0
+MOV R0,A
+MOV P2,@R0
+displayh:
+mov R1, 0x11
+mov A, #0x30
+ADD A,R1
+MOV R1,A
+MOV P3,@R1
 jmp loop
-
-
-
 
