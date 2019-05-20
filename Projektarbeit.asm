@@ -19,11 +19,11 @@ org 0Bh
 timer0_isr:
   CLR TR0
 
-  MOV TH0, #03Ch
-  MOV TL0, #0B0h
+  MOV TH0, #0F0h
+  MOV TL0, #060h
 
   INC TIMER_CTR
-  CJNE TIMER_CTR, #20, timer0_end
+  CJNE TIMER_CTR, #250, timer0_end
     ACALL increment
     MOV TIMER_CTR, #0
   timer0_end:
@@ -38,8 +38,8 @@ init:
   MOV P3,#0xBF
 
   MOV TMOD, #09h
-  MOV TH0, #03Ch
-  MOV TL0, #0B0h
+  MOV TH0, #0F0h
+  MOV TL0, #060h
   SETB TR0
   CLR ET0
   SETB EA
@@ -48,8 +48,8 @@ main_loop:
   if_counter_enabled:
     JNB COUNT_TIME_BUTTON, end_if_counter_enabled
     JB ET0, end_if_counter_enabled
-    MOV TH0, #03Ch
-    MOV TL0, #0B0h
+    MOV TH0, #0F0h
+    MOV TL0, #060h
     SETB ET0
   end_if_counter_enabled:
   if_counter_disabled:
