@@ -1,18 +1,12 @@
+
+org 0x0
+jmp init
+
+init:
 MOV P0,#0xBF
 MOV P1,#0x3F
 MOV P2,#0x3F
 MOV P3,#0x3F
-
-mov 0x30,#0xBF
-mov 0x31,#0x86
-mov 0x32,#0xDB
-mov 0x33,#0xCF
-mov 0x34,#0xE6
-mov 0x35,#0xED
-mov 0x36,#0xFD
-mov 0x37,#0x87
-mov 0x38,#0xFF
-mov 0x39,#0xEF
 
 loop:
 jnb P0.7,loop
@@ -66,31 +60,32 @@ mov 0x13,#0x00
 jmp display3
 
 display3:
-mov R0, 0x13
-mov A, #0x30
-ADD A,R0
-MOV R0,A
-MOV P3,@R0
+MOV A, 0x13
+MOV DPTR, #display_codes
+MOVC A,@A+DPTR
+MOV P3, A
 
 display2:
-mov R0, 0x12
-mov A, #0x30
-ADD A,R0
-MOV R0,A
-MOV P2,@R0
+MOV A, 0x12
+MOV DPTR, #display_codes
+MOVC A, @A+DPTR
+MOV P2, A
 
 display1:
-mov R0, 0x11
-mov A, #0x30
-ADD A,R0
-MOV R0,A
-MOV P1,@R0
+MOV A, 0x11
+MOV DPTR, #display_codes
+MOVC A, @A+DPTR
+MOV P1, A
 
 display0:
-mov R0, 0x10
-mov A, #0x30
-ADD A,R0
-MOV R0,A
-MOV P0,@R0
-jmp loop
+MOV A, 0x10
+MOV DPTR, #display_codes
+MOVC A, @A+DPTR
+MOV P0, A
+JMP loop
+
+org 300h
+display_codes:
+db 0xBF, 0x86, 0xDB, 0xCF, 0xE6
+db 0xED, 0xFD, 0x87, 0xFF, 0xEF
 
