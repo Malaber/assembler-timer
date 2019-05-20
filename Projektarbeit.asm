@@ -9,8 +9,19 @@ MOV P2,#0x3F
 MOV P3,#0x3F
 
 loop:
-jnb P0.7,loop
-jmp pressed
+if_increment_pressed:
+JNB P0.7, end_if_increment_pressed
+ACALL increment
+while_increment_pressed:
+JB P0.7, while_increment_pressed
+end_if_increment_pressed:
+JMP loop
+
+increment:
+JMP inc0
+RET
+
+
 
 loopinc0:
 inc 0x10
@@ -27,10 +38,6 @@ jmp display2
 loopinc3:
 inc 0x13
 jmp display3
-
-pressed:
-jnb P0.7,inc0
-jmp pressed
 
 inc0:
 mov R3, 0x10
