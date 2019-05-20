@@ -6,6 +6,7 @@ DIGIT_3 EQU 0x13
 
 COUNT_TIME_BUTTON EQU P0.7
 INCREMENT_BUTTON EQU P1.7
+RESET_BUTTON EQU P2.7
 
 TIMER_CTR EQU R2
 
@@ -61,6 +62,12 @@ main_loop:
     while_increment_pressed:
       JB INCREMENT_BUTTON, while_increment_pressed
   end_if_increment_pressed:
+  if_reset_pressed:
+    JNB RESET_BUTTON, end_if_reset_pressed
+    ACALL reset_digits
+    while_reset_pressed:
+      JB RESET_BUTTON, while_reset_pressed
+  end_if_reset_pressed:
   JMP main_loop
 
 increment:
