@@ -5,6 +5,7 @@ DIGIT_2 EQU 0x12
 DIGIT_3 EQU 0x13
 
 COUNT_TIME_BUTTON EQU P0.7
+INCREMENT_BUTTON EQU P1.7
 
 TIMER_CTR EQU R2
 
@@ -54,6 +55,12 @@ main_loop:
     JB COUNT_TIME_BUTTON, end_if_counter_disabled
     CLR ET0
   end_if_counter_disabled:
+  if_increment_pressed:
+    JNB INCREMENT_BUTTON, end_if_increment_pressed
+    ACALL increment
+    while_increment_pressed:
+      JB INCREMENT_BUTTON, while_increment_pressed
+  end_if_increment_pressed:
   JMP main_loop
 
 increment:
