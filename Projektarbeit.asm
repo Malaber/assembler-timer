@@ -25,53 +25,45 @@ end_if_increment_pressed:
 JMP loop
 
 increment:
-JMP inc0
+MOV R3, DIGIT_0
+CJNE R3, #09h, increment_ones
+MOV R3, DIGIT_1
+CJNE R3, #09h, increment_tens
+MOV R3, DIGIT_2
+CJNE R3, #09h, increment_hundrets
+MOV R3, DIGIT_3
+CJNE R3, #09h, increment_thousands
+JMP reset_digits
 RET
 
+increment_ones:
+INC DIGIT_0
+JMP display0
 
+increment_tens:
+MOV DIGIT_0, #00h
+INC DIGIT_1
+JMP display1
 
-loopinc0:
-inc DIGIT_0
-jmp display0
+increment_hundrets:
+MOV DIGIT_0, #00h
+MOV DIGIT_1, #00h
+INC DIGIT_2
+JMP display2
 
-loopinc1:
-inc DIGIT_1
-jmp display1
+increment_thousands:
+MOV DIGIT_0, #00h
+MOV DIGIT_1, #00h
+MOV DIGIT_2, #00h
+INC DIGIT_3
+JMP display3
 
-loopinc2:
-inc DIGIT_2
-jmp display2
-
-loopinc3:
-inc DIGIT_3
-jmp display3
-
-inc0:
-mov R3, DIGIT_0
-cjne R3, #0x09, loopinc0
-jmp inc1
-
-inc1:
-mov DIGIT_0, #0x00
-mov R4, DIGIT_1
-cjne R4, #0x09, loopinc1
-jmp inc2
-
-inc2:
-mov DIGIT_1, #0x00
-mov R4, DIGIT_2
-cjne R4, #0x09, loopinc2
-jmp inc3
-
-inc3:
-mov DIGIT_2, #0x00
-mov R4, DIGIT_3
-cjne R4, #0x09, loopinc3
-jmp res
-
-res:
-mov DIGIT_3, #0x00
-jmp display3
+reset_digits:
+MOV DIGIT_0, #00h
+MOV DIGIT_1, #00h
+MOV DIGIT_2, #00h
+MOV DIGIT_3, #00h
+JMP display3
 
 display3:
 MOV A, DIGIT_3
@@ -96,7 +88,7 @@ MOV A, DIGIT_0
 MOV DPTR, #display_codes
 MOVC A, @A+DPTR
 MOV P0, A
-JMP loop
+RET
 
 org 300h
 display_codes:
