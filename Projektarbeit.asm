@@ -4,24 +4,56 @@ DIGIT_1 EQU 0x11
 DIGIT_2 EQU 0x12
 DIGIT_3 EQU 0x13
 
-INCREMENT_BUTTON EQU P0.7
+COUNT_TIME_BUTTON EQU P0.7
 
-org 0x0
+TIMER_CTR EQU R2
+
+org 00h
   JMP init
+
+org 0Bh
+  JMP timer0_isr
+
+timer0_isr:
+  CLR TR0
+
+  MOV TH0, #03Ch
+  MOV TL0, #0B0h
+
+  INC TIMER_CTR
+  CJNE TIMER_CTR, #20, timer0_end
+    ACALL increment
+    MOV TIMER_CTR, #0
+  timer0_end:
+
+  SETB TR0
+  RETI
 
 init:
   MOV P0,#0xBF
-  MOV P1,#0x3F
-  MOV P2,#0x3F
-  MOV P3,#0x3F
+  MOV P1,#0xBF
+  MOV P2,#0xBF
+  MOV P3,#0xBF
+
+  MOV TMOD, #09h
+  MOV TH0, #03Ch
+  MOV TL0, #0B0h
+  SETB TR0
+  CLR ET0
+  SETB EA
 
 main_loop:
-  if_increment_pressed:
-    JNB INCREMENT_BUTTON, end_if_increment_pressed
-    ACALL increment
-    while_increment_pressed:
-      JB INCREMENT_BUTTON, while_increment_pressed
-  end_if_increment_pressed:
+  if_counter_enabled:
+    JNB COUNT_TIME_BUTTON, end_if_counter_enabled
+    JB ET0, end_if_counter_enabled
+    MOV TH0, #03Ch
+    MOV TL0, #0B0h
+    SETB ET0
+  end_if_counter_enabled:
+  if_counter_disabled:
+    JB COUNT_TIME_BUTTON, end_if_counter_disabled
+    CLR ET0
+  end_if_counter_disabled:
   JMP main_loop
 
 increment:
@@ -34,7 +66,6 @@ increment:
   MOV R3, DIGIT_3
   CJNE R3, #09h, increment_thousands
   JMP reset_digits
-  RET
 
 increment_ones:
   INC DIGIT_0
