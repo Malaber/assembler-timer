@@ -64,7 +64,7 @@ main_loop:
   end_if_increment_pressed:
   if_reset_pressed:
     JNB RESET_BUTTON, end_if_reset_pressed
-    ACALL reset_digits
+    ACALL reset_digits_3
     while_reset_pressed:
       JB RESET_BUTTON, while_reset_pressed
   end_if_reset_pressed:
@@ -73,41 +73,41 @@ main_loop:
 increment:
   MOV R3, DIGIT_0
   CJNE R3, #09h, increment_ones
+  MOV DIGIT_0, #00h
   MOV R3, DIGIT_1
   CJNE R3, #09h, increment_tens
+  MOV DIGIT_1, #00h
   MOV R3, DIGIT_2
   CJNE R3, #09h, increment_hundrets
+  MOV DIGIT_2, #00h
   MOV R3, DIGIT_3
   CJNE R3, #09h, increment_thousands
-  JMP reset_digits
+  JMP reset_digits_3
 
 increment_ones:
   INC DIGIT_0
   JMP display0
 
 increment_tens:
-  MOV DIGIT_0, #00h
   INC DIGIT_1
-  JMP display1
+  JMP reset_digits_0
 
 increment_hundrets:
-  MOV DIGIT_0, #00h
-  MOV DIGIT_1, #00h
   INC DIGIT_2
-  JMP display2
+  JMP reset_digits_1
 
 increment_thousands:
-  MOV DIGIT_0, #00h
-  MOV DIGIT_1, #00h
-  MOV DIGIT_2, #00h
   INC DIGIT_3
-  JMP display3
+  JMP reset_digits_2
 
-reset_digits:
-  MOV DIGIT_0, #00h
-  MOV DIGIT_1, #00h
-  MOV DIGIT_2, #00h
+reset_digits_3:
   MOV DIGIT_3, #00h
+reset_digits_2:
+  MOV DIGIT_2, #00h
+reset_digits_1:
+  MOV DIGIT_1, #00h
+reset_digits_0:
+  MOV DIGIT_0, #00h
   JMP display3
 
 display3:
